@@ -8,7 +8,7 @@
     "start": "next start"
   },
   "dependencies": {
-    "bip32": "^5.2.0",
+    "bip32": "^2.0.6",
     "bip39": "^3.0.4",
     "ethers": "^6.8.1",
     "next": "14.2.3",
