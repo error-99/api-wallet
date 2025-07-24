@@ -1,109 +1,88 @@
-# 🧠 Vercel Wallet Generator API
+: '
+🔐 Ethereum Wallet Generator API
+--------------------------------
 
-This project provides a simple backend API to generate cryptocurrency wallets (BSC/Ethereum compatible) either by mnemonic phrases or private keys. It’s designed to deploy easily on Vercel with zero configuration.
+This Node.js API endpoint provides a simple and secure way to generate Ethereum wallets based on
+mnemonic phrases or random private keys, along with support for downloading generated wallets as JSON.
 
----
+📦 Features
+-----------
+✅ Generate Ethereum wallets using BIP-39 mnemonics  
+🔑 Support for random private key-based wallets  
+📂 Download wallets as a JSON file  
+🧭 Custom HD derivation path support (default: m/44'/60'/0'/0)  
+🔒 Built using ethers, bip39, and bip32  
 
-## 🔧 Features
+🚀 How to Use
+-------------
+Send a GET request to the endpoint with query parameters.
 
-- Generate wallets using mnemonic or private key
-- Supports custom derivation paths (default is MetaMask/BSC standard)
-- Generate multiple wallets at once
-- Download generated wallets as JSON file
+✅ Example Requests:
 
----
+1. Generate 5 wallets using mnemonics:
+   curl "http://localhost:3000/api/wallet-generator?count=5&type=mnemonic"
 
-## 🚀 API Endpoints
+2. Generate 3 wallets using random private keys:
+   curl "http://localhost:3000/api/wallet-generator?count=3&type=privateKey"
 
-### 1. Generate Wallets
+3. Download previously generated wallets:
+   curl "http://localhost:3000/api/wallet-generator?action=download&data=<encoded_json_data>"
 
-GET /api/generate?type=mnemonic|privateKey&count=1&path=m/44'/60'/0'/0
+📌 Tip:
+Use encodeURIComponent(JSON.stringify(walletData)) in your frontend to encode the data.
 
-#### Parameters:
+🔧 Query Parameters
+-------------------
+| Name     | Type   | Default           | Description                                                  |
+|----------|--------|-------------------|--------------------------------------------------------------|
+| count    | Number | 1                 | Number of wallets to generate (max: 50)                      |
+| type     | String | "mnemonic"        | "mnemonic" or "privateKey"                                   |
+| path     | String | "m/44'/60'/0'/0"  | HD derivation path for mnemonic wallets                      |
+| action   | String | —                 | Use "download" to trigger JSON download                      |
+| data     | String | —                 | JSON string (URL-encoded) to download as a file              |
 
-- `type`: `"mnemonic"` or `"privateKey"` (default: `mnemonic`)
-- `count`: Number of wallets to generate (default: 1)
-- `path`: Derivation path base for mnemonic wallets (default: `m/44'/60'/0'/0`)
+📤 Response Format
+-------------------
 
-#### Example:
+Mnemonic Wallets:
+[
+  {
+    "mnemonic": "urge stay tomato ...",
+    "path": "m/44'/60'/0'/0",
+    "evm": "0xabc123...def"
+  }
+]
 
-/api/generate?type=mnemonic&count=3&path=m/44'/60'/0'/0
-
-#### Sample Response:
-
-```json
+Private Key Wallets:
 {
-  "type": "mnemonic",
-  "mnemonic": "candy maple cake sugar pudding cream honey rich smooth crumble sweet treat",
-  "pathBase": "m/44'/60'/0'/0",
   "wallets": [
     {
-      "index": 0,
-      "path": "m/44'/60'/0'/0/0",
-      "address": "0xAbc123...",
-      "privateKey": "0x..."
-    },
-    {
-      "index": 1,
-      "path": "m/44'/60'/0'/0/1",
-      "address": "0xDef456...",
-      "privateKey": "0x..."
+      "address": "0xabc123...def",
+      "privateKey": "0x1234abcd..."
     }
   ]
 }
 
+⚠️ Error Responses
+-------------------
+{ "error": "Invalid type. Use \"mnemonic\" or \"privateKey\"." }
 
----
+{ "error": "Could not derive private key at m/44'/60'/0'/0" }
 
-2. Download Wallets JSON
+{ "error": "Internal Server Error" }
 
-GET /api/download?data=<urlencoded-json-string>
+🛠️ Tech Stack
+--------------
+- ethers.js
+- bip39
+- bip32
 
-Pass a URL-encoded JSON string from the generated wallet data. The API returns a downloadable .json file.
+🔐 Security Notice
+-------------------
+Always treat mnemonics and private keys as highly sensitive information.  
+Do not expose them in insecure environments.
 
-Example usage in frontend:
-
-const jsonData = JSON.stringify(walletData);
-const url = `/api/download?data=${encodeURIComponent(jsonData)}`;
-
-
----
-
-📦 Deployment
-
-1. Push this project to a GitHub repository.
-
-
-2. Import and deploy it on Vercel.
-
-
-3. Your APIs will be live immediately.
-
-
-
-
----
-
-✅ Common Derivation Paths
-
-Wallet	Path
-
-MetaMask	m/44'/60'/0'/0
-Trust Wallet	m/44'/60'/0'
-Ledger	m/44'/60'/0'/0/0
-
-
-
----
-
-⚠️ Security Notes
-
-Do NOT expose generated private keys publicly without encryption.
-
-This project is for educational/testing purposes.
-
-For production, consider adding authentication and secure storage.
-
-
-
----
+📄 License
+----------
+MIT © 2025
+'
