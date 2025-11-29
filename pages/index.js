@@ -1,3 +1,5 @@
+'use client'; // <--- THIS IS VERY IMPORTANT FOR NEXT.JS APP ROUTER
+
 import { useState } from 'react';
 
 export default function Home() {
@@ -28,6 +30,7 @@ export default function Home() {
       setResult(data);
     } catch (error) {
       console.error("Failed to generate wallets", error);
+      alert("Error connecting to API");
     } finally {
       setLoading(false);
     }
